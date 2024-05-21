@@ -4,6 +4,11 @@ spring:
         password: ZZQtencent24
         url: jdbc:mysql://bj-cdb-i1dhp2va.sql.tencentcdb.com:24382/yiyan?useUnicode=true&characterEncoding=utf-8&com.mysql.jdbc.faultInjection.serverCharsetIndex=45
         username: root
+    data:
+        redis:
+            host: 123.249.36.120
+            port: 8080
+            timeout: 30000
 mybatis:
     configuration:
         map-underscore-to-camel-case: true
@@ -11,6 +16,8 @@ mybatis:
 logging:
     level:
         com.lucifer.springboot.cache.mapper: debug
+
+
 
 server:
     port: 8080

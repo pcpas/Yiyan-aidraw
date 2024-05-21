@@ -4,6 +4,7 @@ import com.buaa.aidraw.exception.BaseException;
 import com.buaa.aidraw.model.domain.User;
 import com.buaa.aidraw.model.request.LoginRequest;
 import com.buaa.aidraw.model.request.RegisterRequest;
+import com.buaa.aidraw.service.RedisService;
 import com.buaa.aidraw.service.UserService;
 import com.buaa.aidraw.utils.JwtUtil;
 import jakarta.annotation.Resource;
@@ -19,6 +20,8 @@ public class UserController {
 
     @Resource
     UserService userService;
+    @Resource
+    RedisService redisService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest httpServletRequest) {
@@ -44,9 +47,23 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<Map<String, Object>> getUserProfile(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
+
         if (user == null)
             throw new BaseException("用户不存在");
         return ResponseEntity.ok(user.toDict());
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<User> test(HttpServletRequest httpServletRequest){
+
+        User user = (User) httpServletRequest.getAttribute("user");
+        String id = user.getId();
+        User res = redisService.getObject(id, User.class);
+        if(res == null){
+            res = userService.getUserInfo(id);
+            System.out.println("No Redis");
+            redisService.add(id, res);
+        }
+        return ResponseEntity.ok(res);
+    }
 }

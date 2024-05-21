@@ -54,5 +54,12 @@ public class UserService {
         return user;
     }
 
+    public User getUserInfo(String id){
+        User user = userMapper.getUserById(id);
+        if(user==null)
+            throw new BaseException("用户不存在");
+        return user;
+    }
+
 
 }
