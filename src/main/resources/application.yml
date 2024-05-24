@@ -17,7 +17,5 @@ logging:
     level:
         com.lucifer.springboot.cache.mapper: debug
 
-
-
 server:
-    port: 8080
+    port: 8848
