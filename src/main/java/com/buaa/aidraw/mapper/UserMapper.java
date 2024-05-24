@@ -13,15 +13,15 @@ public interface UserMapper {
     @Select("SELECT * FROM User WHERE email=#{email} ORDER BY id DESC LIMIT 1")
     User getUserByEmail(String email);
 
-    @Select("SELECT * FROM User WHERE id=#{id} ORDER BY id DESC LIMIT 1 ")
+    @Select("SELECT * FROM User WHERE id=#{id}")
     User getUserById(String id);
 
-    @Update("UPDATE User SET isActive = true WHERE id = #{id}")
+    @Update("UPDATE User WHERE id = #{id}")
     void updateUser(User user);
 
 
     @Update("UPDATE User SET avatarUrl=#{avatarUrl, jdbcType=VARCHAR}  WHERE id = #{id}")
-    void updateAvatarUrl(String avatarUrl,int id);
+    void updateAvatarUrl(String avatarUrl,String id);
 
 
 }

@@ -21,10 +21,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         System.out.println("开始注册自定义拦截器...");
         registry.addInterceptor(jwtInterceptor())
-                .addPathPatterns("/user/**")
+                .addPathPatterns("/user/**",
+                        "/notifications/**")
                 .excludePathPatterns(
                         "/user/register",
-                        "/user/login");
+                        "/user/login",
+                        "/notifications/publish");
     }
 
 //    @Override

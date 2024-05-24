@@ -33,6 +33,12 @@ public class UserController {
         return ResponseEntity.ok("注册成功");
     }
 
+    @GetMapping("/getSalt")
+    public ResponseEntity<String> getSalt(HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        return ResponseEntity.ok(user.getSalt());
+    }
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
         String email = loginRequest.getEmail();
@@ -55,7 +61,6 @@ public class UserController {
 
     @GetMapping("/test")
     public ResponseEntity<User> test(HttpServletRequest httpServletRequest){
-
         User user = (User) httpServletRequest.getAttribute("user");
         String id = user.getId();
         User res = redisService.getObject(id, User.class);
