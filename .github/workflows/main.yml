@@ -67,7 +67,7 @@ jobs:
           # ssh进入系统后执行什么样的操作。一般是关闭原有的服务在重启
           script: |
             cd /root/javaee
-            ps -ef | grep  demo-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
+            ps -ef | grep 'demo-0.0.1-SNAPSHOT.jar' | grep -v grep | awk '{print $2}' | xargs -r kill -9
             # nohup /root/javaee/zulu17.50.19-ca-jdk17.0.11-linux_x64/bin/java -jar /home/demo-0.0.1-SNAPSHOT.jar > nohup.out &
             nohup /root/javaee/zulu17.50.19-ca-jdk17.0.11-linux_x64/bin/java -jar /home/demo-0.0.1-SNAPSHOT.jar > runtime.log 2>&1 &
             pwd
