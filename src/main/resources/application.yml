@@ -26,5 +26,5 @@ openai:
     model: gpt-4o
 
 baidu:
-    api-key: z6xnAo7P3QN8tSaPHgGa22zK
-    secret-key: Ao3DUVOBagqJrNvqHXqqVSjHx6OIu5cM
+    api: z6xnAo7P3QN8tSaPHgGa22zK
+    secret: Ao3DUVOBagqJrNvqHXqqVSjHx6OIu5cM

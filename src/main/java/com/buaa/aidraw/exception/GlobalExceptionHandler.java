@@ -1,5 +1,6 @@
 package com.buaa.aidraw.exception;
 
+import com.buaa.aidraw.model.entity.StringResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler
-    public ResponseEntity<String> exceptionHandler(BaseException ex){
+    public ResponseEntity<StringResponse> exceptionHandler(BaseException ex){
         log.error("异常信息：{}", ex.getMessage());
-        return ResponseEntity.internalServerError().body(ex.getMessage());
+        return ResponseEntity.internalServerError().body(new StringResponse(ex.getMessage()));
     }
 
 }

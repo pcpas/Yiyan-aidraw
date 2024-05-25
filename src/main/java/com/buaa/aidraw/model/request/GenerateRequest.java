@@ -6,4 +6,7 @@ import lombok.Data;
 public class GenerateRequest {
     private String prompt;
     private String type;
+    private String style;
+    private Integer width;
+    private Integer height;
 }
