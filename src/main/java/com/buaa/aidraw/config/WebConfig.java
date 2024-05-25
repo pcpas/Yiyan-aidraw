@@ -22,7 +22,8 @@ public class WebConfig implements WebMvcConfigurer {
         System.out.println("开始注册自定义拦截器...");
         registry.addInterceptor(jwtInterceptor())
                 .addPathPatterns("/user/**",
-                        "/notifications/**")
+                        "/notifications/**",
+                        "/ai/**")
                 .excludePathPatterns(
                         "/user/register",
                         "/user/login",
