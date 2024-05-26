@@ -38,7 +38,11 @@ public class ElementController {
         return ResponseEntity.ok(new StringResponse(prompt));
     }
 
-
+    /***
+     * 生成素材图片
+     * @param generateRequest 生成参数
+     * @return 素材的Url
+     */
     @PostMapping("/generate")
     public ResponseEntity<StringResponse> generateImage(@RequestBody GenerateRequest generateRequest, HttpServletRequest httpServletRequest) throws JsonProcessingException {
         User user = (User) httpServletRequest.getAttribute("user");

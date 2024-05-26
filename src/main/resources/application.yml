@@ -9,6 +9,7 @@ spring:
             host: 123.249.36.120
             port: 8080
             timeout: 30000
+
 mybatis:
     configuration:
         map-underscore-to-camel-case: true
@@ -28,3 +29,9 @@ openai:
 baidu:
     api: z6xnAo7P3QN8tSaPHgGa22zK
     secret: Ao3DUVOBagqJrNvqHXqqVSjHx6OIu5cM
+
+elasticsearch:
+    host: 121.36.77.207
+    port: 9200
+    username: elastic
+    password: 707602

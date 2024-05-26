@@ -1,0 +1,37 @@
+{
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "userId": {
+        "type": "keyword"
+      },
+      "elementName": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "elementUrl": {
+        "type": "keyword"
+      },
+      "folderId": {
+        "type": "keyword"
+      },
+      "prompt": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "isDelete": {
+        "type": "boolean"
+      },
+      "isPublic": {
+        "type": "boolean"
+      },
+      "createTime": {
+        "type": "date"
+      }
+    }
+  }
+}

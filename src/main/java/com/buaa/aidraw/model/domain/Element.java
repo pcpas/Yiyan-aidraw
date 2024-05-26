@@ -1,10 +1,13 @@
 package com.buaa.aidraw.model.domain;
 
+import lombok.Data;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class Element {
     private String id;
     private String userId;
