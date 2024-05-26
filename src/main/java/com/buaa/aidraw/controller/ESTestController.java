@@ -46,14 +46,14 @@ public class ESTestController {
 
     @PostMapping("/insert")
     public ResponseEntity<String> insertElement(@RequestBody StringRequest request) throws IOException {
-        Element element = elementMapper.getElementById(1);
+        Element element = elementMapper.getElementById(request.getValue());
         searchService.insertElement(element);
         return ResponseEntity.ok("成功");
     }
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteElement(@RequestBody StringRequest request) throws IOException {
-        Element element = elementMapper.getElementById(1);
+        Element element = elementMapper.getElementById(request.getValue());
         searchService.deleteElement(element.getId());
         return ResponseEntity.ok("成功");
     }

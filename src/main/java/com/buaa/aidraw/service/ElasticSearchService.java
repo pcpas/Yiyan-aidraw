@@ -33,6 +33,8 @@ public class ElasticSearchService {
         this.elasticsearchClient = elasticsearchClient;
     }
 
+    // 测试用
+
     private String getMappingConfig(String name){
         return "classpath:es/"+name+".json";
     }
@@ -80,6 +82,8 @@ public class ElasticSearchService {
             e.printStackTrace();
         }
     }
+
+    // 方方可调用
 
     public void insertElement(Element element) {
         try {
