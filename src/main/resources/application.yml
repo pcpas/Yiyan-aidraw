@@ -26,7 +26,7 @@ server:
 
 aliyun:
     endpoint: oss-cn-beijing.aliyuncs.com
-    accessKeyId: LTAI5tHtdxjAYKrfoPBiMzMa
+#    accessKeyId: LTAI5tHtdxjAYKrfoPBiMzMa
 #    accessKeySecret: RspPwVECB2RyZTBmlFArGnfQxcJNEv
     bucketName: yiyan-aidrawing
 
