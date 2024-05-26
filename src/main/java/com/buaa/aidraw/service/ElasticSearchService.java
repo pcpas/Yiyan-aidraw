@@ -8,8 +8,10 @@ import co.elastic.clients.json.jackson.JacksonJsonpGenerator;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.buaa.aidraw.exception.BaseException;
 import com.buaa.aidraw.model.domain.Element;
 import jakarta.annotation.Resource;
+import org.apache.ibatis.javassist.expr.NewArray;
 import org.elasticsearch.client.RequestOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +117,16 @@ public class ElasticSearchService {
         }
     }
 
-    public void searchElement(String keyword) {
+    /***
+     * 元素搜索功能
+     * @param keyword 搜索文本
+     * @param pageNo 当前页码（从1开始）
+     * @param numInPage 一页中结果的数量
+     * @return
+     */
+    public List<Element> searchElement(String keyword, int pageNo, int numInPage) {
+        int from = (pageNo-1) * numInPage;
+        int size = numInPage;
         try {
             Query elementNameQuery = MatchQuery.of(m -> m
                     .field("elementName")
@@ -135,19 +147,22 @@ public class ElasticSearchService {
 
             SearchRequest searchRequest = SearchRequest.of(s -> s
                     .index("element")
+                    .from(from)
+                    .size(size)
                     .query(combinedQuery)
             );
 
-            SearchResponse<Object> searchResponse = elasticsearchClient.search(searchRequest, Object.class);
+            SearchResponse<Element> searchResponse = elasticsearchClient.search(searchRequest, Element.class);
 
-            List<Hit<Object>> hits = searchResponse.hits().hits();
-            for (Hit<Object> hit : hits) {
-                System.out.println("Found document with id: " + hit.id());
-                System.out.println("Source: " + hit.source());
+            List<Hit<Element>> hits = searchResponse.hits().hits();
+            List<Element> res = new ArrayList<>();
+            for (Hit<Element> hit : hits) {
+                res.add(hit.source());
             }
-
+            return res;
         } catch (IOException e) {
             e.printStackTrace();
+            throw new BaseException("搜索出现错误！");
         }
     }
 

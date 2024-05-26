@@ -15,8 +15,8 @@ public class Element {
     private String elementUrl;
     private String folderId;
     private String prompt;
-    private int isDelete;
-    private int isPublic;
+    private boolean isDelete;
+    private boolean isPublic;
     private Timestamp createTime;
 
     public Map<String,Object> toDict(){
