@@ -10,17 +10,17 @@ public interface ElementMapper {
     void insertElement(Element element);
 
     @Select("SELECT * FROM element WHERE id = #{id}")
-    Element getElementById(int id);
+    Element getElementById(String id);
 
     @Select("SELECT * FROM element WHERE userId = #{userId} ORDER BY id DESC LIMIT 1")
-    Element getElementByUserId(int userId);
+    Element getElementByUserId(String userId);
 
     @Update("UPDATE element SET elementName = #{elementName}, elementUrl = #{elementUrl}, folderId = #{folderId}, prompt = #{prompt}, isDelete = #{isDelete}, isPublic = #{isPublic} WHERE id = #{id}")
     void updateElement(Element element);
 
     @Update("UPDATE element SET isDelete = true WHERE id = #{id}")
-    void softDeleteElement(int id);
+    void softDeleteElement(String id);
 
     @Update("UPDATE element SET elementUrl = #{elementUrl} WHERE id = #{id}")
-    void updateElementUrl(String elementUrl, int id);
+    void updateElementUrl(String elementUrl, String id);
 }
