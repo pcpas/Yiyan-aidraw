@@ -20,6 +20,16 @@ logging:
 
 server:
     port: 8848
+    multipart:
+        max-request-size: 500MB
+        max-file-size: 500MB
+
+aliyun:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    accessKeyId: LTAI5tHtdxjAYKrfoPBiMzMa
+    accessKeySecret: RspPwVECB2RyZTBmlFArGnfQxcJNEv
+    bucketName: yiyan-aidrawing
+
 
 openai:
     url: https://api.zetatechs.com/v1/chat/completions
