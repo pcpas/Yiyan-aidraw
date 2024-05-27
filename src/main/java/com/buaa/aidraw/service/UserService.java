@@ -61,5 +61,11 @@ public class UserService {
         return user;
     }
 
+    public String getSaltByEmail(String email){
+        User user = userMapper.getUserByEmail(email);
+        if(user==null)
+            throw new BaseException("用户不存在");
+        return user.getSalt();
+    }
 
 }
