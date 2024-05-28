@@ -24,11 +24,11 @@ server:
         max-request-size: 500MB
         max-file-size: 500MB
 
-aliyun:
-    endpoint: oss-cn-beijing.aliyuncs.com
-    accessKeyId: LTAI5tHtdxjAYKrfoPBiMzMa
-    accessKeySecret: RspPwVECB2RyZTBmlFArGnfQxcJNEv
-    bucketName: yiyan-aidrawing
+#aliyun:
+#    endpoint: oss-cn-beijing.aliyuncs.com
+#    accessKeyId: LTAI5tHtdxjAYKrfoPBiMzMa
+#    accessKeySecret: RspPwVECB2RyZTBmlFArGnfQxcJNEv
+#    bucketName: yiyan-aidrawing
 
 
 openai:

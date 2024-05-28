@@ -23,7 +23,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor())
                 .addPathPatterns("/user/**",
                         "/notifications/**",
-                        "/ai/**")
+                        "/ai/**",
+                        "/element/**")
                 .excludePathPatterns(
                         "/user/register",
                         "/user/login",

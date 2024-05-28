@@ -1,9 +1,12 @@
 package com.buaa.aidraw.controller;
 
+import com.buaa.aidraw.config.OSSConfig;
 import com.buaa.aidraw.exception.BaseException;
 import com.buaa.aidraw.model.domain.User;
+import com.buaa.aidraw.model.entity.SaveElementResponse;
 import com.buaa.aidraw.model.entity.StringResponse;
 import com.buaa.aidraw.model.request.GenerateRequest;
+import com.buaa.aidraw.model.request.SaveElementRequest;
 import com.buaa.aidraw.service.BaiduAIService;
 import com.buaa.aidraw.service.ElementService;
 import com.buaa.aidraw.service.OpenAIService;
@@ -13,10 +16,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/element")
@@ -27,6 +35,8 @@ public class ElementController {
     OpenAIService openAIService;
     @Resource
     BaiduAIService baiduAIService;
+    @Resource
+    OSSConfig ossConfig;
 
     /***
      * 为图片生成文本描述（测试用）
@@ -79,5 +89,34 @@ public class ElementController {
                 break;
         }
         return ResponseEntity.ok(new StringResponse(imageUrl));
+    }
+
+    @GetMapping("/upload")
+    public ResponseEntity<SaveElementResponse> uploadElement(@RequestPart("file") MultipartFile image,
+                                                             @RequestPart("fileName") String fileName,
+                                                             HttpServletRequest httpServletRequest) throws IOException {
+        if(ObjectUtils.isEmpty(image) || image.getSize() <= 0){
+            return ResponseEntity.badRequest().body(new SaveElementResponse(null, null));
+        }
+        String name = fileName + ".svg";
+        String res = ossConfig.upload(image, "element", name);
+        if (res != null){
+            return ResponseEntity.ok(new SaveElementResponse(fileName, res));
+        } else {
+            return ResponseEntity.badRequest().body(new SaveElementResponse(null, null));
+        }
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<StringResponse> saveElement(@RequestBody SaveElementRequest saveElementRequest, HttpServletRequest httpServletRequest) throws IOException {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+        String fileName = saveElementRequest.getFileName();
+        String filepath = saveElementRequest.getFilePath();
+        boolean isPublic = saveElementRequest.isPublic();
+        String prompt = openAIService.getImagePrompt(filepath);
+
+        elementService.addElement(userId, fileName, prompt, isPublic, filepath);
+        return ResponseEntity.ok(new StringResponse("成功"));
     }
 }

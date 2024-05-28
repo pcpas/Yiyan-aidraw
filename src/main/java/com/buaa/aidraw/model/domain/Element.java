@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class Element {
     private String prompt;
     private boolean isDelete;
     private boolean isPublic;
-    private Timestamp createTime;
+    private Date createTime;
 
     public Map<String,Object> toDict(){
         Map<String, Object> map = new HashMap<>();

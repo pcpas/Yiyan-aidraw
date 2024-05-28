@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface ElementMapper {
-    @Insert("INSERT INTO element (userId, elementName, elementUrl, folderId, prompt, isDelete, isPublic) VALUES (#{userId}, #{elementName}, #{elementUrl}, #{folderId}, #{prompt}, 0, #{isPublic})")
+    @Insert("INSERT INTO element (userId, elementName, elementUrl, prompt, isDelete, isPublic, createTime) VALUES (#{userId}, #{elementName}, #{elementUrl}, #{prompt}, #{isDelete}, #{isPublic}, #{createTime})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertElement(Element element);
 
