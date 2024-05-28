@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class OpenAIService {
@@ -21,7 +22,11 @@ public class OpenAIService {
     private final String text = "请你用中文描述这幅图，长度在30字以内。";
     private final Integer maxTokens = 300;
 
-    static final OkHttpClient HTTP_CLIENT = new OkHttpClient().newBuilder().build();
+    static final OkHttpClient HTTP_CLIENT = new OkHttpClient()
+            .newBuilder()
+            .connectTimeout(30, TimeUnit.SECONDS) // 设置连接超时时间为 30 秒
+            .readTimeout(60, TimeUnit.SECONDS)    // 设置读取超时时间为 60 秒
+            .build();
 
 
     public String getImagePrompt(String imageUrl) throws IOException {
