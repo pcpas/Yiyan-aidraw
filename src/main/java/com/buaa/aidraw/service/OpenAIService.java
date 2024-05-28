@@ -3,11 +3,10 @@ package com.buaa.aidraw.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -19,8 +18,6 @@ public class OpenAIService {
     private String api;
     @Value("${openai.model}")
     private String model;
-    private final String text = "请你用中文描述这幅图，长度在30字以内。";
-    private final Integer maxTokens = 300;
 
     static final OkHttpClient HTTP_CLIENT = new OkHttpClient()
             .newBuilder()
@@ -31,19 +28,7 @@ public class OpenAIService {
 
     public String getImagePrompt(String imageUrl) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
-        String bodyString = "{"
-                + "\"model\": \"" + model + "\", "
-                + "\"messages\": ["
-                + "  {"
-                + "    \"role\": \"user\", "
-                + "    \"content\": ["
-                + "      {\"type\": \"text\", \"text\": \"" + text + "\"}, "
-                + "      {\"type\": \"image_url\", \"image_url\": {\"url\": \"" + imageUrl + "\"}}"
-                + "    ]"
-                + "  }"
-                + "], "
-                + "\"max_tokens\": " + maxTokens
-                + "}";
+        String bodyString = getString(imageUrl);
         RequestBody body = RequestBody.create(mediaType, bodyString);
         Request request = new Request.Builder()
                 .url(url)
@@ -61,5 +46,25 @@ public class OpenAIService {
                 .path("message")
                 .path("content")
                 .asText();
+    }
+
+    @NotNull
+    private String getString(String imageUrl) {
+        String text = "请你用中文描述这幅图，长度在30字以内。";
+        int maxTokens = 300;
+        String bodyString = "{"
+                + "\"model\": \"" + model + "\", "
+                + "\"messages\": ["
+                + "  {"
+                + "    \"role\": \"user\", "
+                + "    \"content\": ["
+                + "      {\"type\": \"text\", \"text\": \"" + text + "\"}, "
+                + "      {\"type\": \"image_url\", \"image_url\": {\"url\": \"" + imageUrl + "\"}}"
+                + "    ]"
+                + "  }"
+                + "], "
+                + "\"max_tokens\": " + maxTokens
+                + "}";
+        return bodyString;
     }
 }
