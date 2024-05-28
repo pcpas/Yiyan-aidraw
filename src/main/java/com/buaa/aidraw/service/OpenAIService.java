@@ -3,7 +3,6 @@ package com.buaa.aidraw.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.*;
@@ -28,7 +27,21 @@ public class OpenAIService {
 
     public String getImagePrompt(String imageUrl) throws IOException {
         MediaType mediaType = MediaType.parse("application/json");
-        String bodyString = getString(imageUrl);
+        String text = "请你用中文描述这幅图，长度在30字以内。";
+        int maxTokens = 300;
+        String bodyString = "{"
+                + "\"model\": \"" + model + "\", "
+                + "\"messages\": ["
+                + "  {"
+                + "    \"role\": \"user\", "
+                + "    \"content\": ["
+                + "      {\"type\": \"text\", \"text\": \"" + text + "\"}, "
+                + "      {\"type\": \"image_url\", \"image_url\": {\"url\": \"" + imageUrl + "\"}}"
+                + "    ]"
+                + "  }"
+                + "], "
+                + "\"max_tokens\": " + maxTokens
+                + "}";
         RequestBody body = RequestBody.create(mediaType, bodyString);
         Request request = new Request.Builder()
                 .url(url)
@@ -46,25 +59,5 @@ public class OpenAIService {
                 .path("message")
                 .path("content")
                 .asText();
-    }
-
-    @NotNull
-    private String getString(String imageUrl) {
-        String text = "请你用中文描述这幅图，长度在30字以内。";
-        int maxTokens = 300;
-        String bodyString = "{"
-                + "\"model\": \"" + model + "\", "
-                + "\"messages\": ["
-                + "  {"
-                + "    \"role\": \"user\", "
-                + "    \"content\": ["
-                + "      {\"type\": \"text\", \"text\": \"" + text + "\"}, "
-                + "      {\"type\": \"image_url\", \"image_url\": {\"url\": \"" + imageUrl + "\"}}"
-                + "    ]"
-                + "  }"
-                + "], "
-                + "\"max_tokens\": " + maxTokens
-                + "}";
-        return bodyString;
     }
 }

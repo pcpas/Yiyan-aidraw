@@ -28,13 +28,13 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<StringResponse> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest httpServletRequest) {
         String username = registerRequest.getUsername();
         String password = registerRequest.getPassword();
         String email = registerRequest.getEmail();
         String salt = registerRequest.getSalt();
         userService.register(username, password, email, salt);
-        return ResponseEntity.ok("注册成功");
+        return ResponseEntity.ok(new StringResponse("成功"));
     }
 
     @GetMapping("/getSalt")

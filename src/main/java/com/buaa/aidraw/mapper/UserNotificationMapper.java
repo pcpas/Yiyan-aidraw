@@ -14,7 +14,8 @@ public interface UserNotificationMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertUserNotification(UserNotification userNotification);
 
-    @Select("SELECT n.id, n.title, n.content, n.created_at, n.sent_at, n.type, un.status " +
+    @Select("SELECT n.id, n.title, n.content, n.created_at, n.sent_at, n.type,  " +
+            "CASE WHEN un.status = 'read' THEN true ELSE false END as isRead " +
             "FROM user_notifications un " +
             "JOIN notifications n ON un.notification_id = n.id " +
             "WHERE un.user_id = #{userId} AND un.status = 'unread'")
@@ -28,7 +29,7 @@ public interface UserNotificationMapper {
             "WHERE user_id = #{userId} AND status = 'unread'")
     void markAllNotificationsAsReadByUserId(@Param("userId") String userId);
 
-    @Select("SELECT n.id, n.title, n.content, n.type, n.created_at, n.sent_at, un.status, un.read_at," +
+    @Select("SELECT n.id, n.title, n.content, n.type, n.sent_at, un.read_at, " +
             "CASE WHEN un.status = 'read' THEN true ELSE false END as isRead " +
             "FROM user_notifications un " +
             "JOIN notifications n ON un.notification_id = n.id " +
