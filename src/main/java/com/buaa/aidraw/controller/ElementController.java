@@ -2,13 +2,17 @@ package com.buaa.aidraw.controller;
 
 import com.buaa.aidraw.config.OSSConfig;
 import com.buaa.aidraw.exception.BaseException;
+import com.buaa.aidraw.model.domain.Element;
+import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.User;
 import com.buaa.aidraw.model.entity.SaveElementResponse;
 import com.buaa.aidraw.model.entity.StringResponse;
 import com.buaa.aidraw.model.request.GenerateRequest;
 import com.buaa.aidraw.model.request.SaveElementRequest;
+import com.buaa.aidraw.model.request.StringRequest;
 import com.buaa.aidraw.service.BaiduAIService;
 import com.buaa.aidraw.service.ElementService;
+import com.buaa.aidraw.service.FolderService;
 import com.buaa.aidraw.service.OpenAIService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,6 +36,8 @@ import java.util.UUID;
 public class ElementController {
     @Resource
     ElementService elementService;
+    @Resource
+    FolderService folderService;
     @Resource
     OpenAIService openAIService;
     @Resource
@@ -118,5 +125,42 @@ public class ElementController {
 
         elementService.addElement(userId, fileName, prompt, isPublic, filepath);
         return ResponseEntity.ok(new StringResponse("成功"));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<Element>> myElement(HttpServletRequest httpServletRequest) throws IOException {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        List<Element> elementList = elementService.getElementsByUserId(userId);
+        return ResponseEntity.ok(elementList);
+    }
+
+    @GetMapping("/folder")
+    public ResponseEntity<List<Folder>> folder(HttpServletRequest httpServletRequest) throws IOException {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        List<Folder> folderList = folderService.getFolders(userId, 1);
+        return ResponseEntity.ok(folderList);
+    }
+
+    @GetMapping("/trash")
+    public ResponseEntity<List<Element>> trashElement(HttpServletRequest httpServletRequest) throws IOException {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        List<Element> elementList = elementService.getTrashElements(userId);
+        return ResponseEntity.ok(elementList);
+    }
+
+    @PostMapping("/get")
+    public ResponseEntity<StringResponse> getElement(@RequestBody StringRequest stringRequest, HttpServletRequest httpServletRequest){
+        String elementId = stringRequest.getValue();
+//        System.out.println(elementId);
+
+        Element element = elementService.getElementById(elementId);
+        String file = element.getElementUrl();
+        return ResponseEntity.ok(new StringResponse(file));
     }
 }
