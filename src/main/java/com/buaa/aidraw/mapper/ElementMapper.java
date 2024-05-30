@@ -18,7 +18,7 @@ public interface ElementMapper {
     List<Element> getElementByUserId(String userId);
 
     @Update("UPDATE element SET elementName = #{elementName}, elementUrl = #{elementUrl}, folderId = #{folderId}, prompt = #{prompt}, isDelete = #{isDelete}, isPublic = #{isPublic} WHERE id = #{id}")
-    void updateElement(Element element);
+    int updateElement(Element element);
 
     @Update("UPDATE element SET isDelete = true WHERE id = #{id}")
     void softDeleteElement(String id);
@@ -28,4 +28,7 @@ public interface ElementMapper {
 
     @Select("SELECT * FROM element WHERE userId = #{userId} AND isDelete = 1 ORDER BY id DESC")
     List<Element> getTrashElementByUserId(String userId);
+
+    @Select("SELECT * FROM element WHERE userId = #{userId} AND folderId = #{folderId} AND isDelete = 0 ORDER BY id DESC")
+    List<Element> getElementByFolderId(String userId, String folderId);
 }

@@ -32,7 +32,6 @@ public class ElementService {
     public List<Element> getElementsByUserId(String userId) {
         List<Element> elementList = elementMapper.getElementByUserId(userId);
         return elementList;
-
     }
 
     public List<Element> getTrashElements(String userId) {
@@ -43,5 +42,23 @@ public class ElementService {
     public Element getElementById(String id){
         Element element = elementMapper.getElementById(id);
         return element;
+    }
+
+    public int updateFolder(String id, String folderId, boolean isDelete) {
+        Element element = elementMapper.getElementById(id);
+        element.setFolderId(folderId);
+        element.setDelete(isDelete);
+        return elementMapper.updateElement(element);
+    }
+
+    public int updatePublic(String id, boolean isPublic) {
+        Element element = elementMapper.getElementById(id);
+        element.setPublic(isPublic);
+        return elementMapper.updateElement(element);
+    }
+
+    public List<Element> getElementsByFolderId(String userId, String folderId) {
+        List<Element> elementList = elementMapper.getElementByFolderId(userId, folderId);
+        return elementList;
     }
 }

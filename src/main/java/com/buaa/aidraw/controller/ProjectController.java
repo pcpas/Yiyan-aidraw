@@ -5,6 +5,7 @@ import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.Project;
 import com.buaa.aidraw.model.domain.User;
 import com.buaa.aidraw.model.entity.FileResponse;
+import com.buaa.aidraw.model.entity.ProjectListResponse;
 import com.buaa.aidraw.model.entity.StringResponse;
 import com.buaa.aidraw.model.request.CreateRequest;
 import com.buaa.aidraw.model.request.IdRequest;
@@ -30,11 +31,14 @@ public class ProjectController {
     @Resource
     FolderService folderService;
 
-    public ResponseEntity<List<Project>> getAllProjects(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ProjectListResponse> getAllProjects(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
         List<Project> projectList = projectService.getProjectsByUserId(userId);
-        return ResponseEntity.ok(projectList);
+
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        projectListResponse.setProjectList(projectList);
+        return ResponseEntity.ok(projectListResponse);
     }
 
     @PostMapping("/create")

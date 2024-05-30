@@ -14,11 +14,11 @@ public interface FolderMapper {
     @Select("SELECT * FROM folder WHERE id = #{id}")
     Folder selectById(String id);
 
-    @Select("SELECT * FROM folder WHERE userId = #{userId} AND type=#{type} ORDER BY id DESC")
+    @Select("SELECT * FROM folder WHERE (userId = #{userId} OR userId = 0) AND type=#{type} ORDER BY id DESC")
     List<Folder> selectByUserId(String userId, int type);
 
-    @Update("UPDATE folder SET userId = #{userId}, folderName = #{folderName}, type = #{type}, isDefault = #{isDefault} WHERE id = #{id}")
-    int update(Folder folder);
+    @Update("UPDATE folder SET folderName = #{folderName} WHERE id = #{id}")
+    int update(String id, String folderName);
 
     @Delete("DELETE FROM folder WHERE id = #{id}")
     int delete(String id);

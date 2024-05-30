@@ -16,4 +16,26 @@ public class FolderService {
         List<Folder> folderList = folderMapper.selectByUserId(userId, type);
         return folderList;
     }
+
+    public int addFolder(String userId, int type) {
+        Folder folder = new Folder();
+        folder.setUserId(userId);
+        folder.setType(type);
+        folder.setFolderName("默认文件夹");
+        folder.setDefault(false);
+
+        return folderMapper.insert(folder);
+    }
+
+    public int updateFolder(String id, String name) {
+        return folderMapper.update(id,name);
+    }
+
+    public Folder getFolder(String id) {
+        return folderMapper.selectById(id);
+    }
+
+    public int deleteFolder(String id) {
+        return folderMapper.delete(id);
+    }
 }

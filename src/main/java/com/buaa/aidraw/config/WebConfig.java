@@ -25,7 +25,9 @@ public class WebConfig implements WebMvcConfigurer {
                         "/notifications/**",
                         "/ai/**",
                         "/element/**",
-                        "/project/**")
+                        "/project/**",
+                        "/template/**",
+                        "/folder/**")
                 .excludePathPatterns(
                         "/user/register",
                         "/user/login",

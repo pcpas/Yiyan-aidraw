@@ -2,6 +2,7 @@ package com.buaa.aidraw.service;
 
 import com.buaa.aidraw.mapper.ElementMapper;
 import com.buaa.aidraw.mapper.ProjectMapper;
+import com.buaa.aidraw.model.domain.Element;
 import com.buaa.aidraw.model.domain.Project;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,18 @@ public class ProjectService {
     public int updateProject(Project project){
         projectMapper.updateProject(project);
         return 0;
+    }
+
+    public int updateFolder(String id, String folderId, boolean isDelete) {
+        Project project = projectMapper.getProjectById(id);
+        project.setFolderId(folderId);
+        project.setDelete(isDelete);
+        return projectMapper.updateProject(project);
+    }
+
+    public List<Project> getProjectsByFolderId(String userId, String folderId) {
+        List<Project> projectList = projectMapper.getProjectByFolderId(userId, folderId);
+        return projectList;
     }
 
 
