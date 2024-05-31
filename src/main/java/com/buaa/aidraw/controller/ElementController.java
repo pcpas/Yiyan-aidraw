@@ -5,6 +5,8 @@ import com.buaa.aidraw.exception.BaseException;
 import com.buaa.aidraw.model.domain.Element;
 import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.User;
+import com.buaa.aidraw.model.entity.FolderListResponse;
+import com.buaa.aidraw.model.entity.ObjectListResponse;
 import com.buaa.aidraw.model.entity.SaveElementResponse;
 import com.buaa.aidraw.model.entity.StringResponse;
 import com.buaa.aidraw.model.request.GenerateRequest;
@@ -128,30 +130,36 @@ public class ElementController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<Element>> myElement(HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<ObjectListResponse> myElement(HttpServletRequest httpServletRequest) throws IOException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         List<Element> elementList = elementService.getElementsByUserId(userId);
-        return ResponseEntity.ok(elementList);
+        ObjectListResponse objectListResponse = new ObjectListResponse();
+        objectListResponse.setElementList(elementList);
+        return ResponseEntity.ok(objectListResponse);
     }
 
     @GetMapping("/folder")
-    public ResponseEntity<List<Folder>> folder(HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<FolderListResponse> folder(HttpServletRequest httpServletRequest) throws IOException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         List<Folder> folderList = folderService.getFolders(userId, 1);
-        return ResponseEntity.ok(folderList);
+        FolderListResponse folderListResponse = new FolderListResponse();
+        folderListResponse.setFolderList(folderList);
+        return ResponseEntity.ok(folderListResponse);
     }
 
     @GetMapping("/trash")
-    public ResponseEntity<List<Element>> trashElement(HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<ObjectListResponse> trashElement(HttpServletRequest httpServletRequest) throws IOException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         List<Element> elementList = elementService.getTrashElements(userId);
-        return ResponseEntity.ok(elementList);
+        ObjectListResponse objectListResponse = new ObjectListResponse();
+        objectListResponse.setElementList(elementList);
+        return ResponseEntity.ok(objectListResponse);
     }
 
     @PostMapping("/get")

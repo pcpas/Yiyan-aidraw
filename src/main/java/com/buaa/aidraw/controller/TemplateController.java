@@ -5,7 +5,9 @@ import com.buaa.aidraw.model.domain.Project;
 import com.buaa.aidraw.model.domain.Template;
 import com.buaa.aidraw.model.domain.User;
 import com.buaa.aidraw.model.entity.FileResponse;
+import com.buaa.aidraw.model.entity.FolderListResponse;
 import com.buaa.aidraw.model.entity.ListResponse;
+import com.buaa.aidraw.model.entity.ObjectListResponse;
 import com.buaa.aidraw.model.request.IdRequest;
 import com.buaa.aidraw.service.FolderService;
 import com.buaa.aidraw.service.TemplateService;
@@ -58,20 +60,24 @@ public class TemplateController {
     }
 
     @GetMapping("folder")
-    public ResponseEntity<List<Folder>> folder(HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<FolderListResponse> folder(HttpServletRequest httpServletRequest) throws IOException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         List<Folder> folderList = folderService.getFolders(userId, 3);
-        return ResponseEntity.ok(folderList);
+        FolderListResponse folderListResponse = new FolderListResponse();
+        folderListResponse.setFolderList(folderList);
+        return ResponseEntity.ok(folderListResponse);
     }
 
     @GetMapping("/trash")
-    public ResponseEntity<List<Template>> trashElement(HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<ObjectListResponse> trashElement(HttpServletRequest httpServletRequest) throws IOException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         List<Template> templateList = templateService.getTrashTemplate(userId);
-        return ResponseEntity.ok(templateList);
+        ObjectListResponse objectListResponse = new ObjectListResponse();
+        objectListResponse.setTemplateList(templateList);
+        return ResponseEntity.ok(objectListResponse);
     }
 }

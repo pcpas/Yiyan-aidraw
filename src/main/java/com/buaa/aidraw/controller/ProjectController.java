@@ -5,6 +5,7 @@ import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.Project;
 import com.buaa.aidraw.model.domain.User;
 import com.buaa.aidraw.model.entity.FileResponse;
+import com.buaa.aidraw.model.entity.FolderListResponse;
 import com.buaa.aidraw.model.entity.ProjectListResponse;
 import com.buaa.aidraw.model.entity.StringResponse;
 import com.buaa.aidraw.model.request.CreateRequest;
@@ -63,12 +64,14 @@ public class ProjectController {
     }
 
     @GetMapping("/folder")
-    public ResponseEntity<List<Folder>> folder(HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<FolderListResponse> folder(HttpServletRequest httpServletRequest) throws IOException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         List<Folder> folderList = folderService.getFolders(userId, 2);
-        return ResponseEntity.ok(folderList);
+        FolderListResponse folderListResponse = new FolderListResponse();
+        folderListResponse.setFolderList(folderList);
+        return ResponseEntity.ok(folderListResponse);
     }
 
     @GetMapping("/data")
