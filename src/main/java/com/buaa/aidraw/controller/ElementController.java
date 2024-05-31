@@ -122,6 +122,7 @@ public class ElementController {
         String userId = user.getId();
         String fileName = saveElementRequest.getFileName();
         String filepath = saveElementRequest.getFilePath();
+        System.out.println(filepath);
         boolean isPublic = saveElementRequest.isPublic();
         String prompt = openAIService.getImagePrompt(filepath);
 

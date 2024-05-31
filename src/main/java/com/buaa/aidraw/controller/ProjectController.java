@@ -29,6 +29,7 @@ public class ProjectController {
     @Resource
     FolderService folderService;
 
+    @GetMapping("/my")
     public ResponseEntity<ProjectListResponse> getAllProjects(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
