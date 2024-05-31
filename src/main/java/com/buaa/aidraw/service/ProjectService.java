@@ -16,7 +16,7 @@ public class ProjectService {
     @Resource
     ProjectMapper projectMapper;
 
-    public void addProject(String userId, String projectName, String projectUrl, boolean isPublic, String url) {
+    public String addProject(String userId, String projectName, String projectUrl, boolean isPublic, String url) {
         Project project = new Project();
         project.setUserId(userId);
         project.setProjectName(projectName);
@@ -29,6 +29,7 @@ public class ProjectService {
         project.setFolderId("0");
 
         projectMapper.insertProject(project);
+        return project.getId();
     }
 
     public List<Project> getProjectsByUserId(String userId) {

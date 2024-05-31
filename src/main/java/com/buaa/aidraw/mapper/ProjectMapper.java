@@ -15,8 +15,8 @@ public interface ProjectMapper {
     List<Project> getProjectByUserId(String userId);
 
     @Insert("INSERT INTO project (userId, projectName, projectUrl, isDelete, isPublic, fileUrl, editTime, folderId) VALUES (#{userId}, #{projectName}, #{projectUrl}, #{isDelete}, #{isPublic}, #{fileUrl}, #{editTime}, #{folderId})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    void insertProject(Project project);
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    int insertProject(Project project);
 
     @Update("UPDATE project SET userId = #{userId}, projectName = #{projectName}, projectUrl = #{projectUrl}, isDelete = #{isDelete}, isPublic = #{isPublic}, fileUrl = #{fileUrl}, editTime = #{editTime}, folderId = #{folderId} WHERE id = #{id}")
     int updateProject(Project project);

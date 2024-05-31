@@ -40,15 +40,17 @@ public class ProjectController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createProject(@RequestBody CreateRequest createRequest, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<IdResponse> createProject(@RequestBody CreateRequest createRequest, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         String projectName = createRequest.getName();
         boolean isPublic = createRequest.isPublic();
-        projectService.addProject(userId, projectName, "", isPublic, "");
+        String id = projectService.addProject(userId, projectName, "", isPublic, "");
 
-        return ResponseEntity.ok("成功");
+        IdResponse idResponse = new IdResponse();
+        idResponse.setId(id);
+        return ResponseEntity.ok(idResponse);
     }
 
     @GetMapping("/trash")
