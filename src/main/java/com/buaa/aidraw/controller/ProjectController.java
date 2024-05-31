@@ -4,10 +4,7 @@ import com.buaa.aidraw.model.domain.Element;
 import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.Project;
 import com.buaa.aidraw.model.domain.User;
-import com.buaa.aidraw.model.entity.FileResponse;
-import com.buaa.aidraw.model.entity.FolderListResponse;
-import com.buaa.aidraw.model.entity.ProjectListResponse;
-import com.buaa.aidraw.model.entity.StringResponse;
+import com.buaa.aidraw.model.entity.*;
 import com.buaa.aidraw.model.request.CreateRequest;
 import com.buaa.aidraw.model.request.IdRequest;
 import com.buaa.aidraw.model.request.StringRequest;
@@ -55,12 +52,14 @@ public class ProjectController {
     }
 
     @GetMapping("/trash")
-    public ResponseEntity<List<Project>> trashElement(HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseEntity<ObjectListResponse> trashElement(HttpServletRequest httpServletRequest) throws IOException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
         List<Project> projectList = projectService.getTrashProjects(userId);
-        return ResponseEntity.ok(projectList);
+        ObjectListResponse objectListResponse = new ObjectListResponse();
+        objectListResponse.setProjectList(projectList);
+        return ResponseEntity.ok(objectListResponse);
     }
 
     @GetMapping("/folder")
