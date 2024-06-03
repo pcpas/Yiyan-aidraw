@@ -60,7 +60,7 @@ public class TemplateController {
         return ResponseEntity.ok(listResponse);
     }
 
-    @GetMapping("/data")
+    @PostMapping("/data")
     public ResponseEntity<FileResponse> getTemplate(@RequestBody IdRequest idRequest, HttpServletRequest httpServletRequest){
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();

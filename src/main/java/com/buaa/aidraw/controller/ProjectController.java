@@ -96,7 +96,7 @@ public class ProjectController {
         return ResponseEntity.ok(folderListResponse);
     }
 
-    @GetMapping("/data")
+    @PostMapping("/data")
     public ResponseEntity<FileResponse> getProjectFile(@RequestBody IdRequest idRequest, HttpServletRequest httpServletRequest){
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
