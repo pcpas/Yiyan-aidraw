@@ -53,6 +53,7 @@ public class OpenAIService {
         assert response.body() != null;
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(response.body().string());
+        System.out.println(rootNode.path("choices"));
         return rootNode
                 .path("choices")
                 .get(0)

@@ -19,6 +19,7 @@ public class Element {
     private boolean isDelete;
     private boolean isPublic;
     private Date createTime;
+    private String fileUrl;
 
     public Map<String,Object> toDict(){
         Map<String, Object> map = new HashMap<>();
