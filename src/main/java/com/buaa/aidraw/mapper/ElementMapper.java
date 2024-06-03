@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface ElementMapper {
-    @Insert("INSERT INTO element (userId, elementName, elementUrl, prompt, folderId, isDelete, isPublic, createTime) VALUES (#{userId}, #{elementName}, #{elementUrl}, #{prompt}, #{folderId}, #{isDelete}, #{isPublic}, #{createTime})")
+    @Insert("INSERT INTO element (userId, elementName, elementUrl, prompt, folderId, isDelete, isPublic, createTime, fileUrl) VALUES (#{userId}, #{elementName}, #{elementUrl}, #{prompt}, #{folderId}, #{isDelete}, #{isPublic}, #{createTime}, #{fileUrl})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertElement(Element element);
 
@@ -17,7 +17,7 @@ public interface ElementMapper {
     @Select("SELECT * FROM element WHERE userId = #{userId} AND isDelete = 0 ORDER BY id DESC")
     List<Element> getElementByUserId(String userId);
 
-    @Update("UPDATE element SET elementName = #{elementName}, elementUrl = #{elementUrl}, folderId = #{folderId}, prompt = #{prompt}, isDelete = #{isDelete}, isPublic = #{isPublic} WHERE id = #{id}")
+    @Update("UPDATE element SET elementName = #{elementName}, elementUrl = #{elementUrl}, folderId = #{folderId}, prompt = #{prompt}, isDelete = #{isDelete}, isPublic = #{isPublic}, fileUrl=#{fileUrl} WHERE id = #{id}")
     int updateElement(Element element);
 
     @Update("UPDATE element SET isDelete = true WHERE id = #{id}")

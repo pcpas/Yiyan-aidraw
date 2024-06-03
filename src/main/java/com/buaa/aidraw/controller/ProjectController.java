@@ -1,5 +1,6 @@
 package com.buaa.aidraw.controller;
 
+import com.buaa.aidraw.config.OSSConfig;
 import com.buaa.aidraw.model.domain.Element;
 import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.Project;
@@ -14,6 +15,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +30,24 @@ public class ProjectController {
     ProjectService projectService;
     @Resource
     FolderService folderService;
+    @Resource
+    OSSConfig ossConfig;
+
+    @GetMapping("/img")
+    public ResponseEntity<ImgUrlResponse> uploadElement(@RequestPart("img") MultipartFile image,
+                                                             @RequestPart("id") Integer id,
+                                                             HttpServletRequest httpServletRequest) throws IOException {
+        if(ObjectUtils.isEmpty(image) || image.getSize() <= 0){
+            return ResponseEntity.badRequest().body(new ImgUrlResponse(null));
+        }
+        String name = id + ".svg";
+        String res = ossConfig.upload(image, "project", name);
+        if (res != null){
+            return ResponseEntity.ok(new ImgUrlResponse(res));
+        } else {
+            return ResponseEntity.badRequest().body(new ImgUrlResponse(null));
+        }
+    }
 
     @GetMapping("/my")
     public ResponseEntity<ProjectListResponse> getAllProjects(HttpServletRequest httpServletRequest) {
