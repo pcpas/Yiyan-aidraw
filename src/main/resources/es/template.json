@@ -7,12 +7,12 @@
       "userId": {
         "type": "keyword"
       },
-      "elementName": {
+      "templateName": {
         "type": "text",
         "analyzer": "ik_max_word",
         "search_analyzer": "ik_smart"
       },
-      "elementUrl": {
+      "templateUrl": {
         "type": "keyword"
       },
       "fileUrl": {
@@ -20,11 +20,6 @@
       },
       "folderId": {
         "type": "keyword"
-      },
-      "prompt": {
-        "type": "text",
-        "analyzer": "ik_max_word",
-        "search_analyzer": "ik_smart"
       },
       "isDelete": {
         "type": "boolean"

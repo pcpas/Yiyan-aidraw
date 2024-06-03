@@ -10,6 +10,8 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.buaa.aidraw.exception.BaseException;
 import com.buaa.aidraw.model.domain.Element;
+import com.buaa.aidraw.model.domain.Project;
+import com.buaa.aidraw.model.domain.Template;
 import jakarta.annotation.Resource;
 import org.apache.ibatis.javassist.expr.NewArray;
 import org.elasticsearch.client.RequestOptions;
@@ -169,5 +171,167 @@ public class ElasticSearchService {
             throw new BaseException("搜索出现错误！");
         }
     }
+
+    public void insertProject(Project project) {
+        try {
+            IndexRequest<Project> indexRequest = IndexRequest.of(i -> i
+                    .index("project")
+                    .id(project.getId())
+                    .document(project)
+            );
+
+            IndexResponse indexResponse = elasticsearchClient.index(indexRequest);
+
+            System.out.println("Indexed document with id: " + indexResponse.id());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteProject(String id) {
+        try {
+            // Create the delete request
+            DeleteRequest deleteRequest = DeleteRequest.of(d -> d
+                    .index("project") // Replace with your index name
+                    .id(id)
+            );
+
+            // Execute the delete request
+            DeleteResponse deleteResponse = elasticsearchClient.delete(deleteRequest);
+
+            // Print response
+            System.out.println("Deleted document with id: " + deleteResponse.id());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /***
+     * 项目搜索功能
+     * @param keyword 搜索文本
+     * @param pageNo 当前页码（从1开始）
+     * @param numInPage 一页中结果的数量
+     * @return
+     */
+    public List<Project> searchProject(String keyword, int pageNo, int numInPage) {
+        int from = (pageNo-1) * numInPage;
+        int size = numInPage;
+        try {
+            Query projectNameQuery = MatchQuery.of(m -> m
+                    .field("projectName")
+                    .query(keyword)
+            )._toQuery();
+
+
+            Query combinedQuery = Query.of(q -> q
+                    .bool(b -> b
+                            .should(projectNameQuery)
+                    )
+            );
+
+            SearchRequest searchRequest = SearchRequest.of(s -> s
+                    .index("project")
+                    .from(from)
+                    .size(size)
+                    .query(combinedQuery)
+            );
+
+            SearchResponse<Project> searchResponse = elasticsearchClient.search(searchRequest, Project.class);
+
+            List<Hit<Project>> hits = searchResponse.hits().hits();
+            List<Project> res = new ArrayList<>();
+            for (Hit<Project> hit : hits) {
+                res.add(hit.source());
+            }
+            return res;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BaseException("搜索出现错误！");
+        }
+    }
+
+
+    public void insertTemplate(Template template) {
+        try {
+            IndexRequest<Template> indexRequest = IndexRequest.of(i -> i
+                    .index("template")
+                    .id(template.getId())
+                    .document(template)
+            );
+
+            IndexResponse indexResponse = elasticsearchClient.index(indexRequest);
+
+            System.out.println("Indexed document with id: " + indexResponse.id());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteTemplate(String id) {
+        try {
+            // Create the delete request
+            DeleteRequest deleteRequest = DeleteRequest.of(d -> d
+                    .index("template") // Replace with your index name
+                    .id(id)
+            );
+
+            // Execute the delete request
+            DeleteResponse deleteResponse = elasticsearchClient.delete(deleteRequest);
+
+            // Print response
+            System.out.println("Deleted document with id: " + deleteResponse.id());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /***
+     * 项目搜索功能
+     * @param keyword 搜索文本
+     * @param pageNo 当前页码（从1开始）
+     * @param numInPage 一页中结果的数量
+     * @return
+     */
+    public List<Template> searchTemplate(String keyword, int pageNo, int numInPage) {
+        int from = (pageNo-1) * numInPage;
+        int size = numInPage;
+        try {
+            Query templateNameQuery = MatchQuery.of(m -> m
+                    .field("templateName")
+                    .query(keyword)
+            )._toQuery();
+
+
+            Query combinedQuery = Query.of(q -> q
+                    .bool(b -> b
+                            .should(templateNameQuery)
+                    )
+            );
+
+            SearchRequest searchRequest = SearchRequest.of(s -> s
+                    .index("template")
+                    .from(from)
+                    .size(size)
+                    .query(combinedQuery)
+            );
+
+            SearchResponse<Template> searchResponse = elasticsearchClient.search(searchRequest, Template.class);
+
+            List<Hit<Template>> hits = searchResponse.hits().hits();
+            List<Template> res = new ArrayList<>();
+            for (Hit<Template> hit : hits) {
+                res.add(hit.source());
+            }
+            return res;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BaseException("搜索出现错误！");
+        }
+    }
+
 
 }

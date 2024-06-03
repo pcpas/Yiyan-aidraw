@@ -6,13 +6,14 @@ import com.buaa.aidraw.model.entity.StringResponse;
 import com.buaa.aidraw.model.request.NotificationRequest;
 import com.buaa.aidraw.model.request.StringRequest;
 import com.buaa.aidraw.service.NotificationService;
+import com.buaa.aidraw.service.RedisService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/notifications")
@@ -20,19 +21,13 @@ public class NotificationController {
 
     @Resource
     private NotificationService notificationService;
+    @Resource
+    private RedisService redisService;
 
     @PostMapping("/publish")
     public ResponseEntity<StringResponse> createNotification(@RequestBody NotificationRequest request) {
         notificationService.createNotification(request.getNotification(), request.getUserIds());
         return ResponseEntity.ok(new StringResponse("成功"));
-    }
-
-    @GetMapping("/getAllUnreadNotifications")
-    public ResponseEntity<List<Notification>> getUnreadNotificationsByUserId(HttpServletRequest httpServletRequest) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        List<Notification> res =  notificationService.getUnreadNotificationsByUserId(user.getId());
-        if(res == null) res = new ArrayList<>();
-        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/markAsRead")
@@ -48,6 +43,14 @@ public class NotificationController {
         User user = (User) httpServletRequest.getAttribute("user");
         notificationService.markAllNotificationsAsReadByUserId(user.getId());
         return ResponseEntity.ok(new StringResponse("成功"));
+    }
+
+    @GetMapping("/getAllUnreadNotifications")
+    public ResponseEntity<List<Notification>> getUnreadNotificationsByUserId(HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        List<Notification> res =  notificationService.getUnreadNotificationsByUserId(user.getId());
+        if(res == null) res = new ArrayList<>();
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/getAllNotifications")

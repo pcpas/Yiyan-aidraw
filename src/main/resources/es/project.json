@@ -7,12 +7,12 @@
       "userId": {
         "type": "keyword"
       },
-      "elementName": {
+      "projectName": {
         "type": "text",
         "analyzer": "ik_max_word",
         "search_analyzer": "ik_smart"
       },
-      "elementUrl": {
+      "projectUrl": {
         "type": "keyword"
       },
       "fileUrl": {
@@ -21,18 +21,13 @@
       "folderId": {
         "type": "keyword"
       },
-      "prompt": {
-        "type": "text",
-        "analyzer": "ik_max_word",
-        "search_analyzer": "ik_smart"
-      },
       "isDelete": {
         "type": "boolean"
       },
       "isPublic": {
         "type": "boolean"
       },
-      "createTime": {
+      "editTime": {
         "type": "date"
       }
     }
