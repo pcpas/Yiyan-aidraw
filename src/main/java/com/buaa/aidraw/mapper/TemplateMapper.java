@@ -11,7 +11,7 @@ public interface TemplateMapper {
     @Insert("INSERT INTO template (userId, templateName, templateUrl, fileUrl, isDelete, isPublic, createTime, folderId) " +
             "VALUES (#{userId}, #{templateName}, #{templateUrl}, #{fileUrl}, #{isDelete}, #{isPublic}, #{createTime}, #{folderId})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    void insertTemplate(Template template);
+    int insertTemplate(Template template);
 
     @Select("SELECT * FROM template WHERE id = #{id}")
     Template getTemplateById(String id);

@@ -4,12 +4,11 @@ import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.Project;
 import com.buaa.aidraw.model.domain.Template;
 import com.buaa.aidraw.model.domain.User;
-import com.buaa.aidraw.model.entity.FileResponse;
-import com.buaa.aidraw.model.entity.FolderListResponse;
-import com.buaa.aidraw.model.entity.ListResponse;
-import com.buaa.aidraw.model.entity.ObjectListResponse;
+import com.buaa.aidraw.model.entity.*;
 import com.buaa.aidraw.model.request.IdRequest;
+import com.buaa.aidraw.model.request.IdStringRequest;
 import com.buaa.aidraw.service.FolderService;
+import com.buaa.aidraw.service.ProjectService;
 import com.buaa.aidraw.service.TemplateService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +30,23 @@ public class TemplateController {
     TemplateService templateService;
     @Resource
     FolderService folderService;
+    @Resource
+    ProjectService projectService;
+
+    @GetMapping("/create")
+    public ResponseEntity<IdResponse> createTemplate(@RequestBody IdStringRequest idStringRequest, HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        String projectId = idStringRequest.getId();
+        Project project = projectService.getProjectById(projectId);
+
+        String TemplateId = templateService.createTemplate(project);
+        IdResponse idResponse = new IdResponse();
+        idResponse.setId(TemplateId);
+        return ResponseEntity.ok(idResponse);
+    }
+
 
     @GetMapping("/my")
     public ResponseEntity<ListResponse> myTemplate(HttpServletRequest httpServletRequest){

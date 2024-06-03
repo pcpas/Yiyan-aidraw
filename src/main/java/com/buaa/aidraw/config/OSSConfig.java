@@ -3,6 +3,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
+import com.aliyun.oss.model.CopyObjectResult;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -67,6 +68,15 @@ public class OSSConfig {
         }
     }
 
+    public String copy(String sourceType, String type, String sourceKey){
+        int lastDotIndex = sourceKey.lastIndexOf('/');
+        String afterDot = sourceKey.substring(lastDotIndex + 1);
+        String before = sourceType + "/" + afterDot;
+        String objectName = type + "/" + afterDot;
+        CopyObjectResult result = ossClient.copyObject(bucketName, before, bucketName, afterDot);
+        return cloudName + objectName;
+    }
+
     private File convertMultipartFileToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
@@ -74,6 +84,8 @@ public class OSSConfig {
         fos.close();
         return convFile;
     }
+
+
 
     public OSSConfig() throws ClientException {
     }

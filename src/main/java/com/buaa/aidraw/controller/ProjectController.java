@@ -33,7 +33,7 @@ public class ProjectController {
     @Resource
     OSSConfig ossConfig;
 
-    @GetMapping("/img")
+    @PostMapping("/img")
     public ResponseEntity<ImgUrlResponse> uploadElement(@RequestPart("img") MultipartFile image,
                                                              @RequestPart("id") Integer id,
                                                              HttpServletRequest httpServletRequest) throws IOException {
@@ -103,7 +103,7 @@ public class ProjectController {
 
         String id = String.valueOf(idRequest.getId());
         Project project = projectService.getProjectById(id);
-        String file = project.getProjectUrl();
+        String file = project.getFileUrl();
 
         FileResponse fileResponse = new FileResponse();
         fileResponse.setFile(file);

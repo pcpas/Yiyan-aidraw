@@ -21,6 +21,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +33,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,7 +111,12 @@ public class ElementController {
         if(ObjectUtils.isEmpty(image) || image.getSize() <= 0){
             return ResponseEntity.badRequest().body(new SaveElementResponse(null, null));
         }
-        String name = fileName + ".svg";
+        String name = null;
+        if(fileName == "svg"){
+            name = "element" + ".svg";
+        } else if(fileName == "png"){
+            name = "element" + ".png";
+        }
         String res = ossConfig.upload(image, "element", name);
         if (res != null){
             return ResponseEntity.ok(new SaveElementResponse(fileName, res));
@@ -122,11 +131,12 @@ public class ElementController {
         String userId = user.getId();
         String fileName = saveElementRequest.getFileName();
         String filepath = saveElementRequest.getFilePath();
+        String pngPath = saveElementRequest.getPngPath();
         System.out.println(filepath);
         boolean isPublic = saveElementRequest.isPublic();
-        String prompt = openAIService.getImagePrompt(filepath);
+        String prompt = openAIService.getImagePrompt(pngPath);
 
-        elementService.addElement(userId, fileName, prompt, isPublic, filepath);
+        elementService.addElement(userId, fileName, prompt, isPublic, filepath, pngPath);
         return ResponseEntity.ok(new StringResponse("成功"));
     }
 

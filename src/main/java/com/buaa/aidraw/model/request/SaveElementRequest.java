@@ -7,5 +7,6 @@ public class SaveElementRequest {
     private String fileName;
     private String filePath;
     private boolean isPublic;
+    private String pngPath;
 
 }

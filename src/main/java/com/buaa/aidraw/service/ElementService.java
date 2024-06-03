@@ -14,7 +14,7 @@ public class ElementService {
     @Resource
     ElementMapper elementMapper;
 
-    public void addElement(String userId, String elementName, String prompt, boolean isPublic, String url) {
+    public void addElement(String userId, String elementName, String prompt, boolean isPublic, String url, String pngPath) {
         Element element = new Element();
         element.setElementName(elementName);
         element.setPrompt(prompt);
@@ -23,8 +23,9 @@ public class ElementService {
         element.setCreateTime(created_at);
         element.setDelete(false);
         element.setPublic(isPublic);
-        element.setElementUrl(url);
+        element.setElementUrl(pngPath);
         element.setFolderId("0");
+        element.setFileUrl(url);
 
         elementMapper.insertElement(element);
     }
