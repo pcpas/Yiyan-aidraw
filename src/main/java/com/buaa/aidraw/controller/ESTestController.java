@@ -23,7 +23,7 @@ public class ESTestController {
     @PostMapping("/creat")
     public ResponseEntity<String> creatIndex(@RequestBody String indexName) throws IOException {
         switch (indexName){
-            case "element":
+            case "element","project","template":
                 searchService.CreateIndex(indexName);
                 break;
             default:
@@ -35,7 +35,7 @@ public class ESTestController {
     @GetMapping("/get")
     public ResponseEntity<String> getIndexProperties(@RequestBody String indexName) throws IOException {
         switch (indexName){
-            case "element":
+            case "element","project","template":
                 searchService.getIndexProperties(indexName);
                 break;
             default:
