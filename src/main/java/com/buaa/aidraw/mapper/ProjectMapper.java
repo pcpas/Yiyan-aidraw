@@ -11,7 +11,7 @@ public interface ProjectMapper {
     @Select("SELECT * FROM project WHERE id = #{id}")
     Project getProjectById(String id);
 
-    @Select("SELECT * FROM project WHERE userId = #{userId} AND isDelete = 0 ORDER BY id DESC")
+    @Select("SELECT id, userId, projectName, projectUrl, isDelete, isPublic, editTime, folderId FROM project WHERE userId = #{userId} AND isDelete = 0 ORDER BY id DESC")
     List<Project> getProjectByUserId(String userId);
 
     @Insert("INSERT INTO project (userId, projectName, projectUrl, isDelete, isPublic, fileUrl, editTime, folderId) VALUES (#{userId}, #{projectName}, #{projectUrl}, #{isDelete}, #{isPublic}, #{fileUrl}, #{editTime}, #{folderId})")

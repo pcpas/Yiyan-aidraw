@@ -16,7 +16,7 @@ public interface TemplateMapper {
     @Select("SELECT * FROM template WHERE id = #{id}")
     Template getTemplateById(String id);
 
-    @Select("SELECT * FROM template WHERE userId = #{userId} AND isDelete = 0 ORDER BY createTime DESC")
+    @Select("SELECT id, userId, templateName, templateUrl, isDelete, isPublic, createTime, folderId FROM template WHERE userId = #{userId} AND isDelete = 0 ORDER BY createTime DESC")
     List<Template> getTemplatesByUserId(String userId);
 
     @Select("SELECT * FROM template WHERE userId = #{userId} AND isDelete = 1 ORDER BY createTime DESC")
