@@ -27,7 +27,7 @@ public class TemplateService {
         String templateUrl = ossConfig.copy("project","template", project.getProjectUrl());
         template.setTemplateUrl(templateUrl);
         template.setDelete(false);
-        template.setFolderId("0");
+        template.setFolderId("3");
         template.setPublic(false);
         Date created_at = new Date();
         template.setCreateTime(created_at);

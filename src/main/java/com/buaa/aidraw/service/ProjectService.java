@@ -28,7 +28,7 @@ public class ProjectService {
         project.setFileUrl(url);
         Date created_at = new Date();
         project.setEditTime(created_at);
-        project.setFolderId("0");
+        project.setFolderId("2");
 
         projectMapper.insertProject(project);
         elasticSearchService.insertProject(project);

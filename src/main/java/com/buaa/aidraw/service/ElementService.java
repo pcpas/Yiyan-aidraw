@@ -26,7 +26,7 @@ public class ElementService {
         element.setDelete(false);
         element.setPublic(isPublic);
         element.setElementUrl(pngPath);
-        element.setFolderId("0");
+        element.setFolderId("1");
         element.setFileUrl(url);
 
         elementMapper.insertElement(element);

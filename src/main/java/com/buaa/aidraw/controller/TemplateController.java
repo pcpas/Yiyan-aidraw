@@ -35,7 +35,7 @@ public class TemplateController {
     @Resource
     ElasticSearchService elasticSearchService;
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<IdResponse> createTemplate(@RequestBody IdStringRequest idStringRequest, HttpServletRequest httpServletRequest) throws ClientException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
@@ -111,4 +111,13 @@ public class TemplateController {
         listResponse.setList(list);
         return ResponseEntity.ok(listResponse);
     }
+
+//    @GetMapping("/all")
+//    public ResponseEntity<TemplateFolderResponse> allTemplate(HttpServletRequest httpServletRequest){
+//        User user = (User) httpServletRequest.getAttribute("user");
+//        String userId = user.getId();
+//
+//        ListResponse zero = new ListResponse();
+//        List<Template> zeroList = templateService.
+//    }
 }
