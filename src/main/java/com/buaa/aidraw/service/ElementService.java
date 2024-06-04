@@ -13,6 +13,8 @@ public class ElementService {
 
     @Resource
     ElementMapper elementMapper;
+    @Resource
+    ElasticSearchService elasticSearchService;
 
     public void addElement(String userId, String elementName, String prompt, boolean isPublic, String url, String pngPath) {
         Element element = new Element();
@@ -28,6 +30,7 @@ public class ElementService {
         element.setFileUrl(url);
 
         elementMapper.insertElement(element);
+        elasticSearchService.insertElement(element);
     }
 
     public List<Element> getElementsByUserId(String userId) {
@@ -47,14 +50,22 @@ public class ElementService {
 
     public int updateFolder(String id, String folderId, boolean isDelete) {
         Element element = elementMapper.getElementById(id);
+        if(!element.isDelete()){
+            elasticSearchService.deleteElement(id);
+        }
         element.setFolderId(folderId);
         element.setDelete(isDelete);
+        if(!isDelete){
+            elasticSearchService.insertElement(element);
+        }
         return elementMapper.updateElement(element);
     }
 
     public int updatePublic(String id, boolean isPublic) {
         Element element = elementMapper.getElementById(id);
         element.setPublic(isPublic);
+        elasticSearchService.deleteElement(id);
+        elasticSearchService.insertElement(element);
         return elementMapper.updateElement(element);
     }
 

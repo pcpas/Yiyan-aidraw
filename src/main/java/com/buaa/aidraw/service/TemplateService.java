@@ -17,6 +17,8 @@ public class TemplateService {
     TemplateMapper templateMapper;
     @Resource
     OSSConfig ossConfig;
+    @Resource
+    ElasticSearchService elasticSearchService;
 
     public String createTemplate(Project project){
         Template template = new Template();
@@ -32,6 +34,7 @@ public class TemplateService {
         template.setUserId(project.getUserId());
 
         templateMapper.insertTemplate(template);
+        elasticSearchService.insertTemplate(template);
         String id = template.getId();
         return id;
     }
@@ -53,14 +56,22 @@ public class TemplateService {
 
     public int updateFolder(String id, String folderId, boolean isDelete) {
         Template template = templateMapper.getTemplateById(id);
+        if(!template.isDelete()){
+            elasticSearchService.deleteTemplate(id);
+        }
         template.setFolderId(folderId);
         template.setDelete(isDelete);
+        if(!isDelete){
+            elasticSearchService.insertTemplate(template);
+        }
         return templateMapper.updateTemplate(template);
     }
 
     public int updatePublic(String id, boolean isPublic) {
         Template template = templateMapper.getTemplateById(id);
         template.setPublic(isPublic);
+        elasticSearchService.deleteTemplate(id);
+        elasticSearchService.insertTemplate(template);
         return templateMapper.updateTemplate(template);
     }
 

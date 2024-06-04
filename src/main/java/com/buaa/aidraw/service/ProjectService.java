@@ -15,6 +15,8 @@ public class ProjectService {
 
     @Resource
     ProjectMapper projectMapper;
+    @Resource
+    ElasticSearchService elasticSearchService;
 
     public String addProject(String userId, String projectName, String projectUrl, boolean isPublic, String url) {
         Project project = new Project();
@@ -29,6 +31,7 @@ public class ProjectService {
         project.setFolderId("0");
 
         projectMapper.insertProject(project);
+        elasticSearchService.insertProject(project);
         return project.getId();
     }
 
@@ -51,13 +54,21 @@ public class ProjectService {
 
     public int updateProject(Project project){
         projectMapper.updateProject(project);
+        elasticSearchService.deleteProject(project.getId());
+        elasticSearchService.insertProject(project);
         return 0;
     }
 
     public int updateFolder(String id, String folderId, boolean isDelete) {
         Project project = projectMapper.getProjectById(id);
+        if(!project.isDelete()){
+            elasticSearchService.deleteProject(id);
+        }
         project.setFolderId(folderId);
         project.setDelete(isDelete);
+        if(!isDelete){
+            elasticSearchService.insertProject(project);
+        }
         return projectMapper.updateProject(project);
     }
 
