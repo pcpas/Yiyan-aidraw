@@ -1,14 +1,13 @@
 package com.buaa.aidraw.controller;
 
 import com.buaa.aidraw.config.OSSConfig;
-import com.buaa.aidraw.model.domain.Element;
-import com.buaa.aidraw.model.domain.Folder;
-import com.buaa.aidraw.model.domain.Project;
-import com.buaa.aidraw.model.domain.User;
+import com.buaa.aidraw.model.domain.*;
 import com.buaa.aidraw.model.entity.*;
 import com.buaa.aidraw.model.request.CreateRequest;
 import com.buaa.aidraw.model.request.IdRequest;
 import com.buaa.aidraw.model.request.StringRequest;
+import com.buaa.aidraw.model.request.ValueRequest;
+import com.buaa.aidraw.service.ElasticSearchService;
 import com.buaa.aidraw.service.FolderService;
 import com.buaa.aidraw.service.ProjectService;
 import jakarta.annotation.Resource;
@@ -32,6 +31,8 @@ public class ProjectController {
     FolderService folderService;
     @Resource
     OSSConfig ossConfig;
+    @Resource
+    ElasticSearchService elasticSearchService;
 
     @PostMapping("/img")
     public ResponseEntity<ImgUrlResponse> uploadElement(@RequestPart("img") MultipartFile image,
@@ -40,7 +41,7 @@ public class ProjectController {
         if(ObjectUtils.isEmpty(image) || image.getSize() <= 0){
             return ResponseEntity.badRequest().body(new ImgUrlResponse(null));
         }
-        String name = id + ".svg";
+        String name = id + ".png";
         String res = ossConfig.upload(image, "project", name);
         if (res != null){
             return ResponseEntity.ok(new ImgUrlResponse(res));
@@ -126,6 +127,19 @@ public class ProjectController {
         } else {
             return ResponseEntity.badRequest().body(new StringResponse("失败"));
         }
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<ProjectListResponse> searchTemplate(@RequestBody ValueRequest valueRequest, HttpServletRequest httpServletRequest) throws IOException {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        String value = valueRequest.getValue();
+        int pageNo = valueRequest.getPageNo();
+        List<Project> list = elasticSearchService.searchProject(value, pageNo, 20);
+        ProjectListResponse projectListResponse = new ProjectListResponse();
+        projectListResponse.setProjectList(list);
+        return ResponseEntity.ok(projectListResponse);
     }
 
 

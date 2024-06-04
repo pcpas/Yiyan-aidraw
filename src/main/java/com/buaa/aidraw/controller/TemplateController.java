@@ -7,6 +7,8 @@ import com.buaa.aidraw.model.domain.User;
 import com.buaa.aidraw.model.entity.*;
 import com.buaa.aidraw.model.request.IdRequest;
 import com.buaa.aidraw.model.request.IdStringRequest;
+import com.buaa.aidraw.model.request.ValueRequest;
+import com.buaa.aidraw.service.ElasticSearchService;
 import com.buaa.aidraw.service.FolderService;
 import com.buaa.aidraw.service.ProjectService;
 import com.buaa.aidraw.service.TemplateService;
@@ -29,6 +31,8 @@ public class TemplateController {
     FolderService folderService;
     @Resource
     ProjectService projectService;
+    @Resource
+    ElasticSearchService elasticSearchService;
 
     @GetMapping("/create")
     public ResponseEntity<IdResponse> createTemplate(@RequestBody IdStringRequest idStringRequest, HttpServletRequest httpServletRequest) {
@@ -92,5 +96,18 @@ public class TemplateController {
         ObjectListResponse objectListResponse = new ObjectListResponse();
         objectListResponse.setTemplateList(templateList);
         return ResponseEntity.ok(objectListResponse);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<ListResponse> searchTemplate(@RequestBody ValueRequest valueRequest, HttpServletRequest httpServletRequest) throws IOException {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        String value = valueRequest.getValue();
+        int pageNo = valueRequest.getPageNo();
+        List<Template> list = elasticSearchService.searchTemplate(value, pageNo, 20);
+        ListResponse listResponse = new ListResponse();
+        listResponse.setList(list);
+        return ResponseEntity.ok(listResponse);
     }
 }

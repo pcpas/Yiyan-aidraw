@@ -4,18 +4,14 @@ import com.buaa.aidraw.config.OSSConfig;
 import com.buaa.aidraw.exception.BaseException;
 import com.buaa.aidraw.model.domain.Element;
 import com.buaa.aidraw.model.domain.Folder;
+import com.buaa.aidraw.model.domain.Template;
 import com.buaa.aidraw.model.domain.User;
-import com.buaa.aidraw.model.entity.FolderListResponse;
-import com.buaa.aidraw.model.entity.ObjectListResponse;
-import com.buaa.aidraw.model.entity.SaveElementResponse;
-import com.buaa.aidraw.model.entity.StringResponse;
+import com.buaa.aidraw.model.entity.*;
 import com.buaa.aidraw.model.request.GenerateRequest;
 import com.buaa.aidraw.model.request.SaveElementRequest;
 import com.buaa.aidraw.model.request.StringRequest;
-import com.buaa.aidraw.service.BaiduAIService;
-import com.buaa.aidraw.service.ElementService;
-import com.buaa.aidraw.service.FolderService;
-import com.buaa.aidraw.service.OpenAIService;
+import com.buaa.aidraw.model.request.ValueRequest;
+import com.buaa.aidraw.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -45,6 +42,8 @@ public class ElementController {
     BaiduAIService baiduAIService;
     @Resource
     OSSConfig ossConfig;
+    @Resource
+    ElasticSearchService elasticSearchService;
 
     /***
      * 为图片生成文本描述（测试用）
@@ -106,12 +105,13 @@ public class ElementController {
         if(ObjectUtils.isEmpty(image) || image.getSize() <= 0){
             return ResponseEntity.badRequest().body(new SaveElementResponse(null, null));
         }
-        String name = null;
-        if(fileName == "svg"){
-            name = "element" + ".svg";
-        } else if(fileName == "png"){
-            name = "element" + ".png";
+        String name = "element";
+        if(Objects.equals(fileName, "svg")){
+            name = name + ".svg";
+        } else if(Objects.equals(fileName, "png")){
+            name = name + ".png";
         }
+        System.out.println(fileName);
         String res = ossConfig.upload(image, "element", name);
         if (res != null){
             return ResponseEntity.ok(new SaveElementResponse(fileName, res));
@@ -176,5 +176,18 @@ public class ElementController {
         Element element = elementService.getElementById(elementId);
         String file = element.getElementUrl();
         return ResponseEntity.ok(new StringResponse(file));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<ObjectListResponse> searchTemplate(@RequestBody ValueRequest valueRequest, HttpServletRequest httpServletRequest) throws IOException {
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        String value = valueRequest.getValue();
+        int pageNo = valueRequest.getPageNo();
+        List<Element> list = elasticSearchService.searchElement(value, pageNo, 20);
+        ObjectListResponse objectListResponse = new ObjectListResponse();
+        objectListResponse.setElementList(list);
+        return ResponseEntity.ok(objectListResponse);
     }
 }
