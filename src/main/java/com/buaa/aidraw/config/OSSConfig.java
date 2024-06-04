@@ -43,7 +43,6 @@ public class OSSConfig {
 
     public String upload(MultipartFile file, String type, String name) throws IOException {
         File convFile = convertMultipartFileToFile(file);
-
         try {
             int lastDotIndex = name.lastIndexOf('.');
             if (lastDotIndex != -1) {

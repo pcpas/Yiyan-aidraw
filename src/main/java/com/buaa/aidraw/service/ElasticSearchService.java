@@ -12,6 +12,7 @@ import com.buaa.aidraw.exception.BaseException;
 import com.buaa.aidraw.model.domain.Element;
 import com.buaa.aidraw.model.domain.Project;
 import com.buaa.aidraw.model.domain.Template;
+import com.buaa.aidraw.utils.EsUtil;
 import jakarta.annotation.Resource;
 import org.apache.ibatis.javassist.expr.NewArray;
 import org.elasticsearch.client.RequestOptions;
@@ -172,7 +173,8 @@ public class ElasticSearchService {
         }
     }
 
-    public void insertProject(Project project) {
+    public void insertProject(Project projectOri) {
+        Project project = EsUtil.getEsProjectEntity(projectOri);
         try {
             IndexRequest<Project> indexRequest = IndexRequest.of(i -> i
                     .index("project")
@@ -253,7 +255,8 @@ public class ElasticSearchService {
     }
 
 
-    public void insertTemplate(Template template) {
+    public void insertTemplate(Template templateOri) {
+        Template template = EsUtil.getEsTemplateEntity(templateOri);
         try {
             IndexRequest<Template> indexRequest = IndexRequest.of(i -> i
                     .index("template")

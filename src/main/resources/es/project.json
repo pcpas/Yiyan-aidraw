@@ -15,9 +15,6 @@
       "projectUrl": {
         "type": "keyword"
       },
-      "fileUrl": {
-        "type": "keyword"
-      },
       "folderId": {
         "type": "keyword"
       },
