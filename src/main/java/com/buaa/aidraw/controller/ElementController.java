@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -189,5 +190,39 @@ public class ElementController {
         ObjectListResponse objectListResponse = new ObjectListResponse();
         objectListResponse.setElementList(list);
         return ResponseEntity.ok(objectListResponse);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ElementFolderResponse> allTemplate(HttpServletRequest httpServletRequest){
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        List<Element> zeroList = elementService.getElementsByFolderId(userId, "1");
+
+        ElementFolderResponse elementFolderResponse = new ElementFolderResponse();
+        ElementFolder elementFolder_0 = new ElementFolder();
+        elementFolder_0.setList(zeroList);
+        elementFolder_0.setFolderName("默认文件夹");
+        elementFolder_0.setId("1");
+
+        List<ElementFolder> elementFolderList = new ArrayList<>();
+        elementFolderList.add(elementFolder_0);
+
+        List<Folder> folderList = folderService.getFolders(userId, 1);
+
+        for(Folder folder: folderList){
+            ElementFolder elementFolder = new ElementFolder();
+            elementFolder.setId(folder.getId());
+            elementFolder.setFolderName(folder.getFolderName());
+
+            List<Element> templateList = elementService.getElementsByFolderId(userId, folder.getId());
+            elementFolder.setList(templateList);
+
+            elementFolderList.add(elementFolder);
+        }
+
+        elementFolderResponse.setData(elementFolderList);
+
+        return ResponseEntity.ok(elementFolderResponse);
     }
 }

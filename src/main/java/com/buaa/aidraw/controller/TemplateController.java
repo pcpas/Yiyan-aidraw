@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -112,12 +113,39 @@ public class TemplateController {
         return ResponseEntity.ok(listResponse);
     }
 
-//    @GetMapping("/all")
-//    public ResponseEntity<TemplateFolderResponse> allTemplate(HttpServletRequest httpServletRequest){
-//        User user = (User) httpServletRequest.getAttribute("user");
-//        String userId = user.getId();
-//
-//        ListResponse zero = new ListResponse();
-//        List<Template> zeroList = templateService.
-//    }
+    @GetMapping("/all")
+    public ResponseEntity<TemplateFolderResponse> allTemplate(HttpServletRequest httpServletRequest){
+        User user = (User) httpServletRequest.getAttribute("user");
+        String userId = user.getId();
+
+        ListResponse zero = new ListResponse();
+        List<Template> zeroList = templateService.getTemplatesByFolderId(userId, "3");
+        zero.setList(zeroList);
+
+        TemplateFolderResponse templateFolderResponse = new TemplateFolderResponse();
+        TemplateFolder templateFolder_0 = new TemplateFolder();
+        templateFolder_0.setList(zeroList);
+        templateFolder_0.setFolderName("默认文件夹");
+        templateFolder_0.setId("3");
+
+        List<TemplateFolder> templateFolderList = new ArrayList<>();
+        templateFolderList.add(templateFolder_0);
+
+        List<Folder> folderList = folderService.getFolders(userId, 3);
+
+        for(Folder folder: folderList){
+            TemplateFolder templateFolder = new TemplateFolder();
+            templateFolder.setId(folder.getId());
+            templateFolder.setFolderName(folder.getFolderName());
+
+            List<Template> templateList = templateService.getTemplatesByFolderId(userId, folder.getId());
+            templateFolder.setList(templateList);
+
+            templateFolderList.add(templateFolder);
+        }
+
+        templateFolderResponse.setData(templateFolderList);
+
+        return ResponseEntity.ok(templateFolderResponse);
+    }
 }

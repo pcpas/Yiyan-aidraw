@@ -6,6 +6,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TemplateFolderResponse {
-    private List<TemplateFolder> data;
+public class TemplateFolder {
+    private String id;
+    private String folderName;
+    private List<Template> list;
 }

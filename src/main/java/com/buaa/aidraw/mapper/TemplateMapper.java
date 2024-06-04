@@ -29,6 +29,6 @@ public interface TemplateMapper {
     @Delete("DELETE FROM template WHERE id = #{id}")
     void deleteTemplate(String id);
 
-    @Select("SELECT * FROM template WHERE userId = #{userId} AND folderId = #{folderId} AND isDelete = 0 ORDER BY id DESC")
+    @Select("SELECT id, userId, templateName, templateUrl, isDelete, isPublic, createTime, folderId FROM template WHERE userId = #{userId} AND folderId = #{folderId} AND isDelete = 0 ORDER BY id DESC")
     List<Template> getTemplateByFolderId(String userId, String folderId);
 }
