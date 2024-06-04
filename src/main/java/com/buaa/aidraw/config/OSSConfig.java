@@ -32,7 +32,11 @@ public class OSSConfig {
     private String cloudName = "https://yiyan-aidrawing.oss-cn-beijing.aliyuncs.com/";
     String endpoint = "https://oss-cn-beijing.aliyuncs.com";
     // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
-    EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
+    String accessKeyId = System.getenv("OSS_ACCESS_KEY_ID");
+    String accessKeySecret = System.getenv("OSS_ACCESS_KEY_SECRET");
+    // 使用代码嵌入的RAM用户的访问密钥配置访问凭证。
+    CredentialsProvider credentialsProvider = new DefaultCredentialProvider(accessKeyId, accessKeySecret);
+    //EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
     // 填写Bucket名称，例如examplebucket。
     private String bucketName = "yiyan-aidrawing";
     // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
