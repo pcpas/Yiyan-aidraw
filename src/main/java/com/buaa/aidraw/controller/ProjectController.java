@@ -35,7 +35,7 @@ public class ProjectController {
 
     @PostMapping("/img")
     public ResponseEntity<ImgUrlResponse> uploadElement(@RequestPart("img") MultipartFile image,
-                                                             @RequestPart("id") Integer id,
+                                                             @RequestPart("id") String id,
                                                              HttpServletRequest httpServletRequest) throws IOException {
         if(ObjectUtils.isEmpty(image) || image.getSize() <= 0){
             return ResponseEntity.badRequest().body(new ImgUrlResponse(null));
