@@ -1,5 +1,6 @@
 package com.buaa.aidraw.service;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.buaa.aidraw.config.OSSConfig;
 import com.buaa.aidraw.mapper.TemplateMapper;
 import com.buaa.aidraw.model.domain.Element;
@@ -20,7 +21,7 @@ public class TemplateService {
     @Resource
     ElasticSearchService elasticSearchService;
 
-    public String createTemplate(Project project){
+    public String createTemplate(Project project) throws ClientException {
         Template template = new Template();
         template.setTemplateName(project.getProjectName());
         String templateUrl = ossConfig.copy("project","template", project.getProjectUrl());

@@ -32,15 +32,22 @@ public class OSSConfig {
     private String cloudName = "https://yiyan-aidrawing.oss-cn-beijing.aliyuncs.com/";
     String endpoint = "https://oss-cn-beijing.aliyuncs.com";
     // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
-    EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
     // 填写Bucket名称，例如examplebucket。
     private String bucketName = "yiyan-aidrawing";
     // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
     // 填写本地文件的完整路径，例如D:\\localpath\\examplefile.txt。
     // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
 
+
+
     public String upload(MultipartFile file, String type, String name) throws IOException {
-        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
+        OSS ossClient = null;
+        try{
+            EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
+             ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
+        }catch (ClientException e){
+            e.printStackTrace();
+        }
         File convFile = convertMultipartFileToFile(file);
         try {
             int lastDotIndex = name.lastIndexOf('.');
@@ -66,8 +73,14 @@ public class OSSConfig {
         }
     }
 
-    public String copy(String sourceType, String type, String sourceKey){
-        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
+    public String copy(String sourceType, String type, String sourceKey)  {
+        OSS ossClient = null;
+        try{
+            EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
+            ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
+        }catch (ClientException e){
+            e.printStackTrace();
+        }
         int lastDotIndex = sourceKey.lastIndexOf('/');
         String afterDot = sourceKey.substring(lastDotIndex + 1);
         String before = sourceType + "/" + afterDot;

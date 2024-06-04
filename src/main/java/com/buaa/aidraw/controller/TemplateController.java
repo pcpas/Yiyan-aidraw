@@ -1,5 +1,6 @@
 package com.buaa.aidraw.controller;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.buaa.aidraw.model.domain.Folder;
 import com.buaa.aidraw.model.domain.Project;
 import com.buaa.aidraw.model.domain.Template;
@@ -35,7 +36,7 @@ public class TemplateController {
     ElasticSearchService elasticSearchService;
 
     @GetMapping("/create")
-    public ResponseEntity<IdResponse> createTemplate(@RequestBody IdStringRequest idStringRequest, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<IdResponse> createTemplate(@RequestBody IdStringRequest idStringRequest, HttpServletRequest httpServletRequest) throws ClientException {
         User user = (User) httpServletRequest.getAttribute("user");
         String userId = user.getId();
 
