@@ -28,26 +28,32 @@ import java.util.UUID;
 @Configuration
 @Component
 public class OSSConfig {
-    // Endpoint以华东1（杭州）为例，其它Region请按实际情况填写。
-    private String cloudName = "https://yiyan-aidrawing.oss-cn-beijing.aliyuncs.com/";
-    String endpoint = "https://oss-cn-beijing.aliyuncs.com";
-    // 从环境变量中获取访问凭证。运行本代码示例之前，请确保已设置环境变量OSS_ACCESS_KEY_ID和OSS_ACCESS_KEY_SECRET。
-    // 填写Bucket名称，例如examplebucket。
-    private String bucketName = "yiyan-aidrawing";
-    // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
-    // 填写本地文件的完整路径，例如D:\\localpath\\examplefile.txt。
-    // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
+    @Value("${aliyun.cloudName}")
+    private String cloudName;
+    @Value("${aliyun.endpoint}")
+    private String endpoint;
+    @Value("${aliyun.bucketName}")
+    private String bucketName;
+    @Value("${aliyun.accessKeyId}")
+    private static String accessKeyId;
+    @Value("${aliyun.accessKeySecret}")
+    private static String accessKeySecret;
 
+    private volatile static OSSClientBuilder ossClientBuilder;
 
+    public static OSSClientBuilder initOSSClientBuilder() {
+        if (ossClientBuilder == null) {
+            synchronized (OSSConfig.class) {
+                if (ossClientBuilder == null) {
+                    ossClientBuilder = new OSSClientBuilder();
+                }
+            }
+        }
+        return ossClientBuilder;
+    }
 
     public String upload(MultipartFile file, String type, String name) throws IOException {
-        OSS ossClient = null;
-        try{
-            EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
-             ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
-        }catch (ClientException e){
-            e.printStackTrace();
-        }
+        OSS ossClient = initOSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         File convFile = convertMultipartFileToFile(file);
         try {
             int lastDotIndex = name.lastIndexOf('.');
@@ -74,18 +80,12 @@ public class OSSConfig {
     }
 
     public String copy(String sourceType, String type, String sourceKey)  {
-        OSS ossClient = null;
-        try{
-            EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
-            ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
-        }catch (ClientException e){
-            e.printStackTrace();
-        }
+        OSS ossClient = initOSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         int lastDotIndex = sourceKey.lastIndexOf('/');
         String afterDot = sourceKey.substring(lastDotIndex + 1);
         String before = sourceType + "/" + afterDot;
         String objectName = type + "/" + afterDot;
-        CopyObjectResult result = ossClient.copyObject(bucketName, before, bucketName, objectName);
+        CopyObjectResult result = ossClient.copyObject(bucketName, before, bucketName, afterDot);
         return cloudName + objectName;
     }
 
@@ -96,8 +96,6 @@ public class OSSConfig {
         fos.close();
         return convFile;
     }
-
-
 
     public OSSConfig() throws ClientException {
     }
