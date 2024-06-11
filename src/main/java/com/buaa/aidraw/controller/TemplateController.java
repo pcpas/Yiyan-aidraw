@@ -70,7 +70,7 @@ public class TemplateController {
         String id = String.valueOf(idRequest.getId());
 
         Template template = templateService.getTemplateById(id);
-        String file = template.getTemplateUrl();
+        String file = template.getFileUrl();
 
         FileResponse fileResponse = new FileResponse();
         fileResponse.setFile(file);
