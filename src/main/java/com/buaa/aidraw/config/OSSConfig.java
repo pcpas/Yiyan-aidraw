@@ -85,7 +85,7 @@ public class OSSConfig {
         String afterDot = sourceKey.substring(lastDotIndex + 1);
         String before = sourceType + "/" + afterDot;
         String objectName = type + "/" + afterDot;
-        CopyObjectResult result = ossClient.copyObject(bucketName, before, bucketName, afterDot);
+        CopyObjectResult result = ossClient.copyObject(bucketName, before, bucketName, objectName);
         return cloudName + objectName;
     }
 

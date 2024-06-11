@@ -99,7 +99,7 @@ public class ElementController {
         return ResponseEntity.ok(new StringResponse(imageUrl));
     }
 
-    @GetMapping("/upload")
+    @PostMapping("/upload")
     public ResponseEntity<SaveElementResponse> uploadElement(@RequestPart("file") MultipartFile image,
                                                              @RequestPart("fileName") String fileName,
                                                              HttpServletRequest httpServletRequest) throws IOException {
