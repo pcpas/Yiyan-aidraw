@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class RedisService {
     private final String DEFAULT_KEY_PREFIX = "";
     private final int EXPIRE_TIME = 1;
     private final TimeUnit EXPIRE_TIME_TYPE = TimeUnit.DAYS;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
 
     /**
@@ -38,7 +40,7 @@ public class RedisService {
             if (value != null) {
                 redisTemplate
                         .opsForValue()
-                        .set(DEFAULT_KEY_PREFIX + key, JSON.toJSONString(value), EXPIRE_TIME, EXPIRE_TIME_TYPE);
+                        .set(DEFAULT_KEY_PREFIX + key, objectMapper.writeValueAsString(value), EXPIRE_TIME, EXPIRE_TIME_TYPE);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -125,9 +127,15 @@ public class RedisService {
      */
     public <K, V> List<V> getList(K key, Class<V> clazz) {
         String value = this.get(key);
+        System.out.println(value);
         List<V> result = Collections.emptyList();
         if (!StringUtils.isEmpty(value)) {
-            result = JSONArray.parseArray(value, clazz);
+            try {
+                result = objectMapper.readValue(value, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("JSON parsing error: {}", e.getMessage());
+            }
         }
         return result;
     }
