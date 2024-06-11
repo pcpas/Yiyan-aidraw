@@ -175,7 +175,7 @@ public class ElementController {
 //        System.out.println(elementId);
 
         Element element = elementService.getElementById(elementId);
-        String file = element.getElementUrl();
+        String file = element.getFileUrl();
         return ResponseEntity.ok(new StringResponse(file));
     }
 
